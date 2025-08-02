@@ -1,0 +1,42 @@
+# .gitignore file created for free with Tower (https://www.git-tower.com/)
+# For suggestions or improvements please contact us using support@git-tower.com
+# Generated on 2025-08-02
+# Includes: vue
+
+### Universal ###
+# Common files that should be ignored in all projects
+
+# Logs
+*.log
+# Temporary files
+*.tmp
+*~
+
+*.bak
+# Environment files (containing secrets, API keys, credentials)
+.env
+*.env
+.env.*
+
+# Local configuration that shouldn't be shared
+*.local
+
+### Vue ###
+# Vue.js build files and development artifacts
+
+.DS_Store
+node_modules
+dist
+dist-ssr
+coverage
+
+*.local
+.output
+storybook-static/
+.vuepress/dist
+/cypress/videos/
+
+/cypress/screenshots/
+.env.local
+.env.*.local
+*.log

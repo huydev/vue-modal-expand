@@ -1,28 +1,17 @@
 import { defineComponent } from "vue";
 import { useModalData } from "vue-modal-expand";
-import { useModal } from "vue-modal-expand";
-import { TheDialog2 } from "./TheDialog2";
 
-export const TheDialog = defineComponent({
-  name: "TheDialog",
+export const TheDialog2 = defineComponent({
+  name: "TheDialog2",
   setup: () => {
-    const modalInfo = useModal(TheDialog2);
     const { visible, args, hide, resolve } = useModalData();
     const handleConfirm = () => {
-      modalInfo
-        .show({
-          title: "测试弹窗2",
-          content: "尽快落地实施地理空间2",
-        })
-        .then((data) => {
-          console.log(data);
-          hide();
-          resolve({
-            a: 1,
-            b: 2,
-            c: 3,
-          });
-        });
+      hide();
+      resolve({
+        a: "a",
+        b: "b",
+        c: "c",
+      });
     };
     return () => (
       <el-dialog v-model={visible.value} title={args.value.title} width="500">

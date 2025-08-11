@@ -1,14 +1,14 @@
 import { defineComponent } from "vue";
-import { VtsModalProvider } from "vue-modal-expand";
+import { VueModalProvider } from "vue-modal-expand";
 import { TheTest } from "@/components/TheTest";
 
 const App = defineComponent({
   name: "App",
   setup: () => {
     return () => (
-      <VtsModalProvider>
+      <VueModalProvider>
         <TheTest />
-      </VtsModalProvider>
+      </VueModalProvider>
     );
   },
 });

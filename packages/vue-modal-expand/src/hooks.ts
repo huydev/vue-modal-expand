@@ -106,6 +106,10 @@ export function useModal<D = unknown>(modal: Component, args?: D) {
     if (!isRegistered) {
       modalState?.register(modalId, modal, args);
     }
+    // clean up old promise
+    if (modalState?.promiseStore.has(modalId)) {
+      modalState?.promiseStore.delete(modalId);
+    }
     let resolve!: (args?: unknown) => void;
     let reject!: (args?: unknown) => void;
     const promise = new Promise((res, rej) => {

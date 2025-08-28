@@ -9,13 +9,15 @@ import {
   type DefineComponent,
   type InjectionKey,
   type MethodOptions,
+  type Ref,
 } from "vue";
 
-interface ModalMapValue {
+interface ModalMapValue<ArgsType = unknown> {
   id: string;
   component: DefineComponent<any, any, any, ComputedOptions, MethodOptions>;
   visible: boolean;
-  args: any;
+  initArgs: ArgsType;
+  args: ArgsType;
 }
 interface PromiseMapValue {
   _promise: Promise<unknown>;
@@ -28,31 +30,43 @@ export const ModalStateKey = Symbol(
   "ModalState"
 ) as InjectionKey<ModalStateType>;
 export const ModalUidKey = Symbol("ModalUid") as InjectionKey<string>;
+
 export function useModalProvider() {
   let uid = 0;
   const DIALOG_FLAG = Symbol("__VUE_DIALOG_UID__");
   const store = reactive(new Map<string, ModalMapValue>());
   const promiseStore = new Map<string, PromiseMapValue>();
-  const register = (id: string, modal: any, args: any) => {
+  const register = (id: string, modal: any, initArgs: unknown) => {
     if (!store.has(id)) {
       modal[DIALOG_FLAG] = id;
       store.set(id, {
         id,
         component: markRaw(modal),
         visible: false,
-        args,
+        initArgs,
+        args: undefined,
       });
     } else {
-      store.get(id)!.args = args;
+      store.get(id)!.initArgs = initArgs;
     }
   };
-  const show = (id: string, args?: any) => {
+  const show = (id: string, args?: unknown) => {
     const modalInfo = store.get(id);
     if (modalInfo) {
       if (args) {
         modalInfo.args = {
-          ...modalInfo.args,
-          ...args,
+          ...(typeof modalInfo.initArgs === "object" &&
+          modalInfo.initArgs !== null
+            ? modalInfo.initArgs
+            : {}),
+          ...(typeof args === "object" ? args : {}),
+        };
+      } else {
+        modalInfo.args = {
+          ...(typeof modalInfo.initArgs === "object" &&
+          modalInfo.initArgs !== null
+            ? modalInfo.initArgs
+            : {}),
         };
       }
       modalInfo.visible = true;
@@ -98,14 +112,15 @@ export function useModalProvider() {
     modalList,
   };
 }
-export function useModal<D = unknown>(modal: Component, args?: D) {
+export function useModal<D = unknown>(modal: Component, initArgs?: D) {
   const modalState = injectLocal(ModalStateKey);
   const modalId = modalState?.getModalId(modal);
   const isRegistered = modalState?.store.has(modalId);
+  // Early initialization
+  if (!isRegistered) {
+    modalState?.register(modalId, modal, initArgs);
+  }
   const show = (showArgs?: D) => {
-    if (!isRegistered) {
-      modalState?.register(modalId, modal, args);
-    }
     // clean up old promise
     if (modalState?.promiseStore.has(modalId)) {
       modalState?.promiseStore.delete(modalId);
@@ -137,15 +152,11 @@ export function useModal<D = unknown>(modal: Component, args?: D) {
     remove,
   };
 }
-export function useModalData() {
+export function useModalData<D = unknown>() {
   const modalState = injectLocal(ModalStateKey);
   const modalId = injectLocal(ModalUidKey, "");
-  const isRegistered = modalState?.store.has(modalId);
   const modalInfo = modalState!.store.get(modalId)!;
-  const show = (args?: unknown) => {
-    if (!isRegistered) {
-      modalState?.register(modalId, modalInfo, args);
-    }
+  const show = (args?: D) => {
     modalState?.show(modalId, args);
   };
   const hide = () => {
@@ -162,7 +173,7 @@ export function useModalData() {
   };
   return {
     visible: toRef(modalInfo, "visible"),
-    args: toRef(modalInfo, "args"),
+    args: toRef(modalInfo, "args") as Ref<D>,
     show,
     hide,
     remove,

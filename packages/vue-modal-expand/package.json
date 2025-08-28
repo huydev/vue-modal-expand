@@ -1,6 +1,6 @@
 {
   "name": "vue-modal-expand",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Turn any modal component into an command API",
   "type": "module",
   "files": [
@@ -16,6 +16,11 @@
     "command-style"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/huydev/vue-modal-expand/tree/main/packages/vue-modal-expand",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huydev/vue-modal-expand.git"
+  },
   "main": "dist/index.umd.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +32,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build"
+    "build": "vue-tsc -b && vite build",
+    "release": "npm publish"
   },
   "peerDependencies": {
     "vue": "catalog:"

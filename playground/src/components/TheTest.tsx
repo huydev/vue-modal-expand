@@ -7,18 +7,22 @@ export const TheTest = defineComponent({
   setup: () => {
     const modalInstance = useModal(TheDialog);
     const handleClick = () => {
-      modalInstance
-        .show({
-          title: "测试弹窗",
-          content: "尽快落地实施地理空间",
-        })
-        .then((data) => {
-          console.log(data);
-        });
+      modalInstance.show({
+        id: "a1",
+        name: "1111",
+      });
+    };
+    const handleEdit = () => {
+      modalInstance.show({
+        id: "a2",
+        name: "2222",
+        time: "的艰苦拉萨独立的思考",
+      });
     };
     return () => (
       <div>
-        <el-button onClick={handleClick}>弹窗</el-button>
+        <el-button onClick={handleClick}>新增</el-button>
+        <el-button onClick={handleEdit}>编辑</el-button>
       </div>
     );
   },

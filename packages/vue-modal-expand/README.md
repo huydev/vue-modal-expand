@@ -26,18 +26,17 @@ The root provider component that manages modal state. Must be placed at the root
 
 #### Hooks
 
-##### useModal(component, args)
+##### useModal(component)
 
 Creates a command-style API for a modal component.
 
 Parameters:
 
 - `component`: The modal component to wrap
-- `args`: Initial arguments to pass to the modal
 
 Returns:
 
-- show(showArgs): Method to display the modal, returns a promise
+- show(args): Method to display the modal, returns a promise
 - hide(): Method to hide the modal
 
 ##### useModalData()
@@ -48,10 +47,10 @@ Returns:
 
 - visible: Ref to the visibility state
 - args: Ref to the arguments passed to the modal
-- show(): Method to show modal
+- show(args): Method to show modal
 - hide(): Method to hide modal
-- resolve(args): Resolve the modal promise
-- reject(args): Reject the modal promise
+- resolve(dataArgs): Resolve the modal promise
+- reject(dataArgs): Reject the modal promise
 
 ## Examples
 

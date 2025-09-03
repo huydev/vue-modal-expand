@@ -4,7 +4,7 @@ import { useModalData } from "vue-modal-expand";
 export const TheDialog = defineComponent({
   name: "TheDialog",
   setup: () => {
-    const { visible, args, hide, resolve } = useModalData();
+    const { visible, args, hide, resolve, remove } = useModalData<any>();
     const form = ref({
       name: undefined,
       time: undefined,
@@ -16,6 +16,9 @@ export const TheDialog = defineComponent({
         form.value.name = args.value.name;
         form.value.time = args.value.time;
       }
+    };
+    const handleCancel = () => {
+      remove();
     };
     return () => (
       <el-dialog
@@ -37,7 +40,7 @@ export const TheDialog = defineComponent({
           ),
           footer: () => (
             <div class="dialog-footer">
-              <el-button>取消</el-button>
+              <el-button onClick={handleCancel}>取消</el-button>
               <el-button type="primary" onClick={handleConfirm}>
                 确认
               </el-button>

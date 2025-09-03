@@ -26,18 +26,17 @@ pnpm add vue-modal-expand
 
 ### 钩子
 
-#### useModal(component, args)
+#### useModal(component)
 
 为模态框组件创建命令式 API。
 
 参数：
 
 - `component`: 要包装的模态框组件
-- `args`: 传递给模态框的初始参数
 
 返回：
 
-- show(showArgs): 显示模态框的方法，返回一个 Promise
+- show(args): 显示模态框的方法，返回一个 Promise
 - hide(): 隐藏模态框的方法
 
 #### useModalData()
@@ -48,7 +47,7 @@ pnpm add vue-modal-expand
 
 - visible: 可见性状态的 Ref
 - args: 传递给模态框的参数的 Ref
-- show(): 显示模态框的方法
+- show(args): 显示模态框的方法
 - hide(): 隐藏模态框的方法
 - resolve(args): 解决模态框 Promise
 - reject(args): 拒绝模态框 Promise

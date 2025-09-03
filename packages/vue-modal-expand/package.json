@@ -1,6 +1,6 @@
 {
   "name": "vue-modal-expand",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Turn any modal component into an command API",
   "type": "module",
   "files": [

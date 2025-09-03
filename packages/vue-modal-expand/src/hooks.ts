@@ -4,6 +4,7 @@ import {
   markRaw,
   reactive,
   toRef,
+  nextTick,
   type Component,
   type ComputedOptions,
   type DefineComponent,
@@ -16,7 +17,6 @@ interface ModalMapValue<ArgsType = unknown> {
   id: string;
   component: DefineComponent<any, any, any, ComputedOptions, MethodOptions>;
   visible: boolean;
-  initArgs: ArgsType;
   args: ArgsType;
 }
 interface PromiseMapValue {
@@ -36,38 +36,24 @@ export function useModalProvider() {
   const DIALOG_FLAG = Symbol("__VUE_DIALOG_UID__");
   const store = reactive(new Map<string, ModalMapValue>());
   const promiseStore = new Map<string, PromiseMapValue>();
-  const register = (id: string, modal: any, initArgs: unknown) => {
+  const register = (id: string, modal: any) => {
     if (!store.has(id)) {
       modal[DIALOG_FLAG] = id;
       store.set(id, {
         id,
         component: markRaw(modal),
         visible: false,
-        initArgs,
         args: undefined,
       });
-    } else {
-      store.get(id)!.initArgs = initArgs;
     }
   };
   const show = (id: string, args?: unknown) => {
     const modalInfo = store.get(id);
     if (modalInfo) {
       if (args) {
-        modalInfo.args = {
-          ...(typeof modalInfo.initArgs === "object" &&
-          modalInfo.initArgs !== null
-            ? modalInfo.initArgs
-            : {}),
-          ...(typeof args === "object" ? args : {}),
-        };
+        modalInfo.args = args;
       } else {
-        modalInfo.args = {
-          ...(typeof modalInfo.initArgs === "object" &&
-          modalInfo.initArgs !== null
-            ? modalInfo.initArgs
-            : {}),
-        };
+        modalInfo.args = undefined;
       }
       modalInfo.visible = true;
     }
@@ -79,8 +65,17 @@ export function useModalProvider() {
     }
   };
   const remove = (id: string) => {
+    const cacheStore = store.get(id);
+    const cachePromiseStore = promiseStore.get(id);
     store.delete(id);
     promiseStore.delete(id);
+    nextTick(() => {
+      if (cacheStore) {
+        cacheStore.visible = false;
+        store.set(id, cacheStore);
+      }
+      cachePromiseStore && promiseStore.set(id, cachePromiseStore);
+    });
   };
   const getModalId = (modal: any) => {
     if (!modal[DIALOG_FLAG]) {
@@ -112,15 +107,15 @@ export function useModalProvider() {
     modalList,
   };
 }
-export function useModal<D = unknown>(modal: Component, initArgs?: D) {
+export function useModal<D = unknown>(modal: Component) {
   const modalState = injectLocal(ModalStateKey);
   const modalId = modalState?.getModalId(modal);
   const isRegistered = modalState?.store.has(modalId);
   // Early initialization
   if (!isRegistered) {
-    modalState?.register(modalId, modal, initArgs);
+    modalState?.register(modalId, modal);
   }
-  const show = (showArgs?: D) => {
+  const show = (args?: D) => {
     // clean up old promise
     if (modalState?.promiseStore.has(modalId)) {
       modalState?.promiseStore.delete(modalId);
@@ -136,7 +131,7 @@ export function useModal<D = unknown>(modal: Component, initArgs?: D) {
       _resolve: resolve,
       _reject: reject,
     });
-    modalState!.show(modalId, showArgs)!;
+    modalState!.show(modalId, args)!;
     return modalState!.promiseStore.get(modalId)!._promise;
   };
   const hide = () => {

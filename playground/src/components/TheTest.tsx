@@ -7,10 +7,7 @@ export const TheTest = defineComponent({
   setup: () => {
     const modalInstance = useModal(TheDialog);
     const handleClick = () => {
-      modalInstance.show({
-        id: "a1",
-        name: "1111",
-      });
+      modalInstance.show();
     };
     const handleEdit = () => {
       modalInstance.show({

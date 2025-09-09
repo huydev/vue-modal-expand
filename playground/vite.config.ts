@@ -12,10 +12,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
-      "vue-modal-expand": resolve(
-        __dirname,
-        "../packages/vue-modal-expand/src/index.ts"
-      ),
     },
   },
 });

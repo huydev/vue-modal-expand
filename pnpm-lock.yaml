@@ -106,6 +106,9 @@ importers:
       vue:
         specifier: 'catalog:'
         version: 3.5.18(typescript@5.8.3)
+      vue-modal-expand:
+        specifier: workspace:*
+        version: link:../packages/vue-modal-expand
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: 'catalog:'

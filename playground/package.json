@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "element-plus": "catalog:",
-    "vue": "catalog:"
+    "vue": "catalog:",
+    "vue-modal-expand": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "catalog:",
